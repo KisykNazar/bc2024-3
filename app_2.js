@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { program } = require('commander');
 
+// Обробка командного рядка
 program
   .requiredOption('-i, --input <path>', 'Path to the input file')
   .option('-o, --output <path>', 'Path to the output file')
@@ -9,6 +10,12 @@ program
 program.parse(process.argv);
 
 const options = program.opts();
+
+// Перевірка, чи вказано обов'язковий параметр
+if (!options.input) {
+  console.log("Please, specify input file");
+  process.exit(1);
+}
 
 // Перевірка наявності файлу для зчитування
 if (!fs.existsSync(options.input)) {
@@ -26,7 +33,7 @@ if (!Array.isArray(data)) {
 }
 
 // Знаходимо максимальний курс
-let maxRate = Math.max(...data.map(rate => rate.rate));
+let maxRate = Math.max(...data.filter(rate => rate.rate).map(rate => rate.rate));
 
 // Формуємо результат
 const result = `Максимальний курс: ${maxRate}`;
